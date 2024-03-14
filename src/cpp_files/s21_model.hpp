@@ -12,9 +12,6 @@
 namespace s21 {
 class Model {
  public:
-  typedef enum output { OK, ERROR } output;
-  typedef enum axis { OX, OY, OZ } axis;
-
   Model(const std::string filename);
   ~Model();
 

@@ -25,6 +25,9 @@ typedef struct point {
   double oy = 0;
   double oz = 0;
 } point;
+
+typedef enum output { OK, ERROR } output;
+typedef enum axis { OX, OY, OZ } axis;
 }  // namespace s21
 
 #endif

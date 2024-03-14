@@ -9,14 +9,14 @@ Model::~Model() {
   RemovePolygons();
 };
 
-Model::output Model::ParserFirstReadFile() {
-  Model::output res = Model::OK;
+output Model::ParserFirstReadFile() {
+  output res = OK;
   std::fstream fin(path_, std::fstream::in);
   if (!fin) {
-    res = Model::ERROR;
+    res = ERROR;
   }
   char ch;
-  if (res == Model::OK) {
+  if (res == OK) {
     while (fin.get(ch) && ch != EOF) {
       if (ch == 'v' && fin.get(ch) && ch == ' ') {
         ++cube_data_.count_of_vertexes;
@@ -70,9 +70,9 @@ void Model::ParserSecondReadFile() {
   }
 }
 
-Model::output Model::PrepareData() {
-  Model::output status = ParserFirstReadFile();
-  if (status == Model::OK) {
+output Model::PrepareData() {
+  output status = ParserFirstReadFile();
+  if (status == OK) {
     cube_data_.matrix_3d.rows = cube_data_.count_of_vertexes;
     cube_data_.matrix_3d.cols = 3;
     cube_data_.matrix_3d.matrix = new double *[cube_data_.matrix_3d.rows]();
@@ -85,69 +85,63 @@ Model::output Model::PrepareData() {
   return status;
 }
 
-Model::output Model::Translate(double move_x, double move_y, double move_z) {
+output Model::Translate(double move_x, double move_y, double move_z) {
   if (!cube_data_.matrix_3d.matrix) {
-    return Model::ERROR;
+    return ERROR;
   }
   for (size_t i = 0; i < cube_data_.matrix_3d.rows; ++i) {
-    cube_data_.matrix_3d.matrix[i][Model::OX] =
-        cube_data_.matrix_3d.matrix[i][Model::OX] + move_x;
-    cube_data_.matrix_3d.matrix[i][Model::OY] =
-        cube_data_.matrix_3d.matrix[i][Model::OY] + move_y;
-    cube_data_.matrix_3d.matrix[i][Model::OZ] =
-        cube_data_.matrix_3d.matrix[i][Model::OZ] + move_z;
+    cube_data_.matrix_3d.matrix[i][OX] =
+        cube_data_.matrix_3d.matrix[i][OX] + move_x;
+    cube_data_.matrix_3d.matrix[i][OY] =
+        cube_data_.matrix_3d.matrix[i][OY] + move_y;
+    cube_data_.matrix_3d.matrix[i][OZ] =
+        cube_data_.matrix_3d.matrix[i][OZ] + move_z;
   }
-  return Model::OK;
+  return OK;
 }
 
-Model::output Model::Rotate(axis axis, double angle) {
+output Model::Rotate(axis axis, double angle) {
   double temp_x, temp_y, temp_z;
   if (!cube_data_.matrix_3d.matrix) {
-    return Model::ERROR;
+    return ERROR;
   }
   double sin_val = std::sin(angle);
   double cos_val = std::cos(angle);
   for (size_t i = 0; i < cube_data_.matrix_3d.rows; ++i) {
-    if (axis == Model::OX) {
-      temp_y = cube_data_.matrix_3d.matrix[i][Model::OY];
-      temp_z = cube_data_.matrix_3d.matrix[i][Model::OZ];
-      cube_data_.matrix_3d.matrix[i][Model::OY] =
-          temp_y * cos_val - temp_z * sin_val;
-      cube_data_.matrix_3d.matrix[i][Model::OZ] =
-          temp_y * sin_val + temp_z * cos_val;
+    if (axis == OX) {
+      temp_y = cube_data_.matrix_3d.matrix[i][OY];
+      temp_z = cube_data_.matrix_3d.matrix[i][OZ];
+      cube_data_.matrix_3d.matrix[i][OY] = temp_y * cos_val - temp_z * sin_val;
+      cube_data_.matrix_3d.matrix[i][OZ] = temp_y * sin_val + temp_z * cos_val;
     } else if (axis == OY) {
-      temp_x = cube_data_.matrix_3d.matrix[i][Model::OX];
-      temp_z = cube_data_.matrix_3d.matrix[i][Model::OZ];
-      cube_data_.matrix_3d.matrix[i][Model::OX] =
-          temp_x * cos_val + temp_z * sin_val;
-      cube_data_.matrix_3d.matrix[i][Model::OZ] =
-          -temp_x * sin_val + temp_z * cos_val;
+      temp_x = cube_data_.matrix_3d.matrix[i][OX];
+      temp_z = cube_data_.matrix_3d.matrix[i][OZ];
+      cube_data_.matrix_3d.matrix[i][OX] = temp_x * cos_val + temp_z * sin_val;
+      cube_data_.matrix_3d.matrix[i][OZ] = -temp_x * sin_val + temp_z * cos_val;
     } else if (axis == OZ) {
-      temp_x = cube_data_.matrix_3d.matrix[i][Model::OX];
-      temp_y = cube_data_.matrix_3d.matrix[i][Model::OY];
-      cube_data_.matrix_3d.matrix[i][Model::OX] =
-          temp_x * cos_val - temp_y * sin_val;
-      cube_data_.matrix_3d.matrix[i][Model::OY] =
-          temp_x * sin_val + temp_y * cos_val;
+      temp_x = cube_data_.matrix_3d.matrix[i][OX];
+      temp_y = cube_data_.matrix_3d.matrix[i][OY];
+      cube_data_.matrix_3d.matrix[i][OX] = temp_x * cos_val - temp_y * sin_val;
+      cube_data_.matrix_3d.matrix[i][OY] = temp_x * sin_val + temp_y * cos_val;
     }
   }
 
-  return Model::OK;
+  return OK;
 }
 
-Model::output Model::Scale(double mult_x, double mult_y, double mult_z) {
+output Model::Scale(double mult_x, double mult_y, double mult_z) {
   if (!cube_data_.matrix_3d.matrix) {
-    return Model::ERROR;
+    return ERROR;
   }
   for (size_t i = 0; i < cube_data_.matrix_3d.rows; ++i) {
-    cube_data_.matrix_3d.matrix[i][Model::OX] =
-        cube_data_.matrix_3d.matrix[i][Model::OX] * mult_x;
-    cube_data_.matrix_3d.matrix[i][Model::OY] =
-        cube_data_.matrix_3d.matrix[i][Model::OY] * mult_y;
-    cube_data_.matrix_3d.matrix[i][Model::OZ] =
-        cube_data_.matrix_3d.matrix[i][Model::OZ] * mult_z;
+    cube_data_.matrix_3d.matrix[i][OX] =
+        cube_data_.matrix_3d.matrix[i][OX] * mult_x;
+    cube_data_.matrix_3d.matrix[i][OY] =
+        cube_data_.matrix_3d.matrix[i][OY] * mult_y;
+    cube_data_.matrix_3d.matrix[i][OZ] =
+        cube_data_.matrix_3d.matrix[i][OZ] * mult_z;
   }
-  return Model::OK;
+  return OK;
 }
 
 s21::data &Model::GetCubeData() { return cube_data_; }
@@ -187,13 +181,13 @@ void Model::CombineFacesWithVertexes() {
          ++j) {
       points_[i][j].ox =
           cube_data_.matrix_3d
-              .matrix[cube_data_.polygons[i].vertexes[j] - 1][Model::OX];
+              .matrix[cube_data_.polygons[i].vertexes[j] - 1][OX];
       points_[i][j].oy =
           cube_data_.matrix_3d
-              .matrix[cube_data_.polygons[i].vertexes[j] - 1][Model::OY];
+              .matrix[cube_data_.polygons[i].vertexes[j] - 1][OY];
       points_[i][j].oz =
           cube_data_.matrix_3d
-              .matrix[cube_data_.polygons[i].vertexes[j] - 1][Model::OZ];
+              .matrix[cube_data_.polygons[i].vertexes[j] - 1][OZ];
     }
   }
 }

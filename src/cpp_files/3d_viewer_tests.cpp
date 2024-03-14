@@ -3,23 +3,23 @@
 #include <iostream>
 #include <vector>
 
-#include "s21_model.hpp"
+#include "s21_controller.hpp"
 
 #define TOLERANCE 1e-6
 
 TEST(Parser, Test1) {
-  s21::Model model("test_objs/cube.obj");
-  s21::Model::output status = model.PrepareData();
-  ASSERT_EQ(status, s21::Model::OK);
+  s21::Controller controller("test_objs/cube.obj");
+  s21::output status = controller.PrepareData();
+  ASSERT_EQ(status, s21::OK);
   std::vector<double> vertexes = {
       1.0, -1.0, -1.0, 1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0, -1.0, -1.0,
       1.0, 1.0,  -1.0, 1.0, 1.0,  1.0, -1.0, 1.0,  1.0, -1.0, 1.0,  -1.0};
-  auto cube_data = model.GetCubeData();
+  auto cube_data = controller.GetCubeData();
   for (size_t i = 0; i < vertexes.size() / 3; ++i) {
-    ASSERT_DOUBLE_EQ(cube_data.matrix_3d.matrix[i][model.OX], vertexes[i * 3]);
-    ASSERT_DOUBLE_EQ(cube_data.matrix_3d.matrix[i][model.OY],
+    ASSERT_DOUBLE_EQ(cube_data.matrix_3d.matrix[i][s21::OX], vertexes[i * 3]);
+    ASSERT_DOUBLE_EQ(cube_data.matrix_3d.matrix[i][s21::OY],
                      vertexes[i * 3 + 1]);
-    ASSERT_DOUBLE_EQ(cube_data.matrix_3d.matrix[i][model.OZ],
+    ASSERT_DOUBLE_EQ(cube_data.matrix_3d.matrix[i][s21::OZ],
                      vertexes[i * 3 + 2]);
   }
   std::vector<int> facets = {2, 3, 4, 8, 7, 6, 5, 6, 2, 6, 7, 3,
@@ -32,8 +32,8 @@ TEST(Parser, Test1) {
     }
   }
 
-  model.CombineFacesWithVertexes();
-  auto combined_data = model.GetPoints();
+  controller.CombineFacesWithVertexes();
+  auto combined_data = controller.GetPoints();
 
   std::vector<double> points = {
       1.0,  -1.0, 1.0,  -1.0, -1.0, 1.0,  -1.0, -1.0, -1.0, -1.0, 1.0,  -1.0,
@@ -57,18 +57,18 @@ TEST(Parser, Test1) {
 }
 
 TEST(Affine, Rotate) {
-  s21::Model model("test_objs/cube.obj");
-  model.PrepareData();
-  s21::Model::output status = model.Rotate(model.OX, 45);
-  ASSERT_EQ(status, s21::Model::OK);
-  status = model.Rotate(model.OY, 45);
-  ASSERT_EQ(status, s21::Model::OK);
-  status = model.Rotate(model.OZ, 45);
-  ASSERT_EQ(status, s21::Model::OK);
-  auto cube_data = model.GetCubeData();
-  s21::Model cube_rotated_model("test_objs/cube_rotated.obj");
-  cube_rotated_model.PrepareData();
-  auto cube_rotated = cube_rotated_model.GetCubeData();
+  s21::Controller controller("test_objs/cube.obj");
+  controller.PrepareData();
+  s21::output status = controller.Rotate(s21::OX, 45);
+  ASSERT_EQ(status, s21::OK);
+  status = controller.Rotate(s21::OY, 45);
+  ASSERT_EQ(status, s21::OK);
+  status = controller.Rotate(s21::OZ, 45);
+  ASSERT_EQ(status, s21::OK);
+  auto cube_data = controller.GetCubeData();
+  s21::Controller cube_rotated_controller("test_objs/cube_rotated.obj");
+  cube_rotated_controller.PrepareData();
+  auto cube_rotated = cube_rotated_controller.GetCubeData();
   for (size_t i = 0; i < cube_data.matrix_3d.rows; ++i) {
     for (size_t j = 0; j < cube_data.matrix_3d.cols; ++j) {
       EXPECT_NEAR(cube_data.matrix_3d.matrix[i][j],
@@ -78,14 +78,14 @@ TEST(Affine, Rotate) {
 }
 
 TEST(Affine, Translate) {
-  s21::Model model("test_objs/cube.obj");
-  model.PrepareData();
-  s21::Model::output status = model.Translate(5, 6, 9);
-  ASSERT_EQ(status, s21::Model::OK);
-  auto cube_data = model.GetCubeData();
-  s21::Model cube_translated_model("test_objs/cube_translated.obj");
-  cube_translated_model.PrepareData();
-  auto cube_translated = cube_translated_model.GetCubeData();
+  s21::Controller controller("test_objs/cube.obj");
+  controller.PrepareData();
+  s21::output status = controller.Translate(5, 6, 9);
+  ASSERT_EQ(status, s21::OK);
+  auto cube_data = controller.GetCubeData();
+  s21::Controller cube_translated_controller("test_objs/cube_translated.obj");
+  cube_translated_controller.PrepareData();
+  auto cube_translated = cube_translated_controller.GetCubeData();
   for (size_t i = 0; i < cube_data.matrix_3d.rows; ++i) {
     for (size_t j = 0; j < cube_data.matrix_3d.cols; ++j) {
       EXPECT_NEAR(cube_data.matrix_3d.matrix[i][j],
@@ -95,20 +95,36 @@ TEST(Affine, Translate) {
 }
 
 TEST(Affine, Scale) {
-  s21::Model model("test_objs/cube.obj");
-  model.PrepareData();
-  s21::Model::output status = model.Scale(1, 10, -0.25);
-  ASSERT_EQ(status, s21::Model::OK);
-  auto cube_data = model.GetCubeData();
-  s21::Model cube_translated_model("test_objs/cube_scaled.obj");
-  cube_translated_model.PrepareData();
-  auto cube_translated = cube_translated_model.GetCubeData();
+  s21::Controller controller("test_objs/cube.obj");
+  controller.PrepareData();
+  s21::output status = controller.Scale(1, 10, -0.25);
+  ASSERT_EQ(status, s21::OK);
+  auto cube_data = controller.GetCubeData();
+  s21::Controller cube_translated_controller("test_objs/cube_scaled.obj");
+  cube_translated_controller.PrepareData();
+  auto cube_translated = cube_translated_controller.GetCubeData();
   for (size_t i = 0; i < cube_data.matrix_3d.rows; ++i) {
     for (size_t j = 0; j < cube_data.matrix_3d.cols; ++j) {
       EXPECT_NEAR(cube_data.matrix_3d.matrix[i][j],
                   cube_translated.matrix_3d.matrix[i][j], TOLERANCE);
     }
   }
+}
+
+TEST(Parser, FileDoesNotExist) {
+  s21::Controller controller("wljndjajwbgjw.obj");
+  s21::output status = controller.PrepareData();
+  ASSERT_EQ(status, s21::ERROR);
+}
+
+TEST(Affine, Nulls) {
+  s21::Controller controller("test_objs/cube.obj");
+  s21::output status = controller.Rotate(s21::OX, 45);
+  ASSERT_EQ(status, s21::ERROR);
+  status = controller.Translate(5, 6, 9);
+  ASSERT_EQ(status, s21::ERROR);
+  controller.Scale(1, 10, -0.25);
+  ASSERT_EQ(status, s21::ERROR);
 }
 
 int main(int argc, char **argv) {

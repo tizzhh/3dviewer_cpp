@@ -48,7 +48,7 @@ tests: $(TEST_OBJECTS) $(OBJECTS)
 
 gcov_report: clean add_gcov_flags tests
 	./test
-	lcov --capture --directory . --output-file coverage.info
+	lcov --capture --directory . --output-file coverage.info --no-external
 	genhtml coverage.info --output-directory gcov_report
 	open gcov_report/index.html
 
