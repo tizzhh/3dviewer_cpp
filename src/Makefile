@@ -1,25 +1,26 @@
-CFLAGS = -Wall -Werror -Wextra -std=c11 -pedantic
-LFLAGS = -lcheck
-CC = gcc
+CXXFLAGS = -Wall -Werror -Wextra -std=c++17
+LFLAGS = -lgtest -lgtest_main
+CXX = g++
 
 INSTALL_DIR := ../build
 
 .PHONY: clean all rebuild install uninstall dvi dist
 
-ALL_C_FILES := $(wildcard c_files/*.c)
+ALL_CPP_FILES := $(wildcard cpp_files/*.cpp)
+HEADERS := $(wildcard cpp_files/*.hpp)
 
-SOURCES := $(filter-out c_files/3d_viewer_tests.c, $(ALL_C_FILES))
-TESTS := c_files/3d_viewer_tests.c
+SOURCES := $(filter-out cpp_files/3d_viewer_tests.cpp, $(ALL_CPP_FILES))
+TESTS := cpp_files/3d_viewer_tests.cpp
 
-OBJECTS := $(SOURCES:.c=.o)
-TEST_OBJECTS := $(TESTS:.c=.o)
+OBJECTS := $(SOURCES:.cpp=.o)
+TEST_OBJECTS := $(TESTS:.cpp=.o)
 
 ifeq ($(shell uname), Linux)
-	LFLAGS = -lpthread -lcheck -lsubunit -lm
+	LFLAGS = -lpthread -lgtest -lgtest_main -lsubunit -lm
 endif
 
-%.o: %.c 3d_viewer.h
-	$(CC) $(CFLAGS) -c $< -o $@
+%.o: %.cpp $(HEADERS)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 all: tests
 
@@ -42,7 +43,7 @@ dist: install
 	rm -rf ../3dviewer_dist
 
 tests: $(TEST_OBJECTS) $(OBJECTS)
-	$(CC) $(OBJECTS) c_files/3d_viewer_tests.c $(LFLAGS) -o test
+	$(CXX) $(OBJECTS) cpp_files/3d_viewer_tests.cpp $(LFLAGS) -o test
 	./test
 
 gcov_report: clean add_gcov_flags tests
@@ -57,10 +58,10 @@ lib3d_viewer.a: $(OBJECTS)
 	cp ./lib3d_viewer.a $(INSTALL_DIR)
 
 add_gcov_flags:
-	$(eval CFLAGS += --coverage)
+	$(eval CXXFLAGS += --coverage)
 	$(eval LFLAGS += -lgcov)
 
 clean:
-	rm -rf *.o c_files/*.o test gcov_report c_files/*.gcda c_files/*.gcno coverage.info *.a a.out *.tar latex html $(INSTALL_DIR) ../3dviewer_dist 3dviewer.tar.gz
+	rm -rf *.o cpp_files/*.o test gcov_report cpp_files/*.gcda cpp_files/*.gcno coverage.info *.a a.out *.tar latex html $(INSTALL_DIR) ../3dviewer_dist 3dviewer.tar.gz
 
 rebuild: clean all

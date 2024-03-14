@@ -48,7 +48,7 @@ void Model::ParserSecondReadFile() {
   std::string getline_str;
   size_t count_of_vertexes = 0, count_of_polygons = 0;
   while (std::getline(fin, getline_str)) {
-    char mode, buff;
+    char mode;
     std::istringstream iss(getline_str);
     iss >> mode;
     if (mode == 'v') {
@@ -60,7 +60,8 @@ void Model::ParserSecondReadFile() {
 #define vert_in_fac \
   cube_data_.polygons[count_of_polygons].number_of_vertexes_in_facets
       vert_in_fac = ParserCountOfVertexesInStr(getline_str);
-      cube_data_.polygons[count_of_polygons].vertexes = new int[vert_in_fac]();
+      cube_data_.polygons[count_of_polygons].vertexes =
+          new size_t[vert_in_fac]();
       for (size_t i = 0; i != vert_in_fac; ++i) {
         iss >> cube_data_.polygons[count_of_polygons].vertexes[i];
       }

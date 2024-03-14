@@ -8,7 +8,7 @@
 #define TOLERANCE 1e-6
 
 TEST(Parser, Test1) {
-  s21::Model model("../test_objs/cube.obj");
+  s21::Model model("test_objs/cube.obj");
   s21::Model::output status = model.PrepareData();
   ASSERT_EQ(status, s21::Model::OK);
   std::vector<double> vertexes = {
@@ -57,7 +57,7 @@ TEST(Parser, Test1) {
 }
 
 TEST(Affine, Rotate) {
-  s21::Model model("../test_objs/cube.obj");
+  s21::Model model("test_objs/cube.obj");
   model.PrepareData();
   s21::Model::output status = model.Rotate(model.OX, 45);
   ASSERT_EQ(status, s21::Model::OK);
@@ -66,7 +66,7 @@ TEST(Affine, Rotate) {
   status = model.Rotate(model.OZ, 45);
   ASSERT_EQ(status, s21::Model::OK);
   auto cube_data = model.GetCubeData();
-  s21::Model cube_rotated_model("../test_objs/cube_rotated.obj");
+  s21::Model cube_rotated_model("test_objs/cube_rotated.obj");
   cube_rotated_model.PrepareData();
   auto cube_rotated = cube_rotated_model.GetCubeData();
   for (size_t i = 0; i < cube_data.matrix_3d.rows; ++i) {
@@ -78,12 +78,12 @@ TEST(Affine, Rotate) {
 }
 
 TEST(Affine, Translate) {
-  s21::Model model("../test_objs/cube.obj");
+  s21::Model model("test_objs/cube.obj");
   model.PrepareData();
   s21::Model::output status = model.Translate(5, 6, 9);
   ASSERT_EQ(status, s21::Model::OK);
   auto cube_data = model.GetCubeData();
-  s21::Model cube_translated_model("../test_objs/cube_translated.obj");
+  s21::Model cube_translated_model("test_objs/cube_translated.obj");
   cube_translated_model.PrepareData();
   auto cube_translated = cube_translated_model.GetCubeData();
   for (size_t i = 0; i < cube_data.matrix_3d.rows; ++i) {
@@ -95,12 +95,12 @@ TEST(Affine, Translate) {
 }
 
 TEST(Affine, Scale) {
-  s21::Model model("../test_objs/cube.obj");
+  s21::Model model("test_objs/cube.obj");
   model.PrepareData();
   s21::Model::output status = model.Scale(1, 10, -0.25);
   ASSERT_EQ(status, s21::Model::OK);
   auto cube_data = model.GetCubeData();
-  s21::Model cube_translated_model("../test_objs/cube_scaled.obj");
+  s21::Model cube_translated_model("test_objs/cube_scaled.obj");
   cube_translated_model.PrepareData();
   auto cube_translated = cube_translated_model.GetCubeData();
   for (size_t i = 0; i < cube_data.matrix_3d.rows; ++i) {
