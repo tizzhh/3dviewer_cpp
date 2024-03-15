@@ -176,6 +176,7 @@ void MainWindow::on_loadButton_clicked() {
     if (res == s21::ERROR) {
       QMessageBox::critical(this, "Error", "Failed parse file");
     } else {
+        ui->oglwidget->createDrawbleData();
 //      ui->oglwidget->setDataObject(dataObject);
       ui->oglwidget->update();
       QStringList list = file.split("/");

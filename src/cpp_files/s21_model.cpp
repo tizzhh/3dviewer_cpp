@@ -7,7 +7,7 @@ Model::~Model() {
   RemovePolygons();
 };
 
-output Model::ParserFirstReadFile() {
+output Model::ParserFirstReadFile_() {
   output res = OK;
   std::fstream fin(path_, std::fstream::in);
   if (!fin) {
@@ -26,7 +26,7 @@ output Model::ParserFirstReadFile() {
   return res;
 }
 
-size_t Model::ParserCountOfVertexesInStr(const std::string &str) {
+size_t Model::ParserCountOfVertexesInStr_(const std::string &str) {
   size_t count_of_vertexes = 0;
   bool ver_found = false;
 
@@ -41,27 +41,31 @@ size_t Model::ParserCountOfVertexesInStr(const std::string &str) {
   return count_of_vertexes;
 }
 
-void Model::ParserSecondReadFile() {
+void Model::ParserSecondReadFile_() {
   std::fstream fin(path_, std::fstream::in);
   std::string getline_str;
   size_t count_of_vertexes = 0, count_of_polygons = 0;
   while (std::getline(fin, getline_str)) {
-    char mode;
-    std::istringstream iss(getline_str);
-    iss >> mode;
-    if (mode == 'v' && getline_str[1] == ' ') {
-      iss >> cube_data_.matrix_3d.matrix[count_of_vertexes][0] >>
-          cube_data_.matrix_3d.matrix[count_of_vertexes][1] >>
-          cube_data_.matrix_3d.matrix[count_of_vertexes][2];
+    char mode, buff;
+    char *str = getline_str.data();
+    char *ptr = str;
+    sscanf(ptr, "%c%c", &mode, &buff);
+    ptr += 2;
+    if (mode == 'v' && buff == ' ') {
+      sscanf(ptr, "%lf%lf%lf",
+             &cube_data_.matrix_3d.matrix[count_of_vertexes][0],
+             &cube_data_.matrix_3d.matrix[count_of_vertexes][1],
+             &cube_data_.matrix_3d.matrix[count_of_vertexes][2]);
       ++count_of_vertexes;
-    } else if (mode == 'f' && getline_str[1] == ' ') {
+    } else if (mode == 'f' && buff == ' ') {
 #define vert_in_fac \
   cube_data_.polygons[count_of_polygons].number_of_vertexes_in_facets
-      vert_in_fac = ParserCountOfVertexesInStr(getline_str);
+      vert_in_fac = ParserCountOfVertexesInStr_(getline_str);
       cube_data_.polygons[count_of_polygons].vertexes =
           new size_t[vert_in_fac]();
       for (size_t i = 0; i != vert_in_fac; ++i) {
-        iss >> cube_data_.polygons[count_of_polygons].vertexes[i];
+        sscanf(ptr, "%ld", &cube_data_.polygons[count_of_polygons].vertexes[i]);
+        ptr += ParserCountOfChars_(ptr);
       }
       ++count_of_polygons;
     }
@@ -69,7 +73,7 @@ void Model::ParserSecondReadFile() {
 }
 
 output Model::PrepareData() {
-  output status = ParserFirstReadFile();
+  output status = ParserFirstReadFile_();
   if (status == OK) {
     cube_data_.matrix_3d.rows = cube_data_.count_of_vertexes;
     cube_data_.matrix_3d.cols = 3;
@@ -78,7 +82,7 @@ output Model::PrepareData() {
       cube_data_.matrix_3d.matrix[i] = new double[cube_data_.matrix_3d.cols]();
     }
     cube_data_.polygons = new polygon_t[cube_data_.count_of_facets]();
-    ParserSecondReadFile();
+    ParserSecondReadFile_();
   }
   return status;
 }
@@ -187,6 +191,7 @@ void Model::CombineFacesWithVertexes() {
           cube_data_.matrix_3d
               .matrix[cube_data_.polygons[i].vertexes[j] - 1][OZ];
     }
+    std::cout << '\n';
   }
 }
 
@@ -204,5 +209,14 @@ void Model::FreePoints() {
     delete[] points_;
     points_ = nullptr;
   }
+}
+
+size_t Model::ParserCountOfChars_(char *str) {
+  size_t result = 0;
+  while ((*str >= '0' && *str <= '9') || *str == '/') {
+    ++result;
+    ++str;
+  }
+  return result + 1;
 }
 }  // namespace s21

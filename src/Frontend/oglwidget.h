@@ -50,6 +50,7 @@ class OGLWidget : public QOpenGLWidget {
   bool getIsVertexCircle() const;
 
   int getTypeLine() const;
+  void createDrawbleData();
 
  protected:
   void initializeGL() override;
@@ -57,7 +58,6 @@ class OGLWidget : public QOpenGLWidget {
   void paintGL() override;
 
  private:
-  void createDrawbleData();
 
   bool ortho = true;
   double vertexSize = 1;

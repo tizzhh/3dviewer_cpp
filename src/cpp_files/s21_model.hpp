@@ -4,6 +4,7 @@
 #include <cmath>
 #include <cstdio>
 #include <fstream>
+#include <iostream>
 #include <sstream>
 #include <string>
 
@@ -15,9 +16,6 @@ class Model {
   Model() = default;
   ~Model();
 
-  output ParserFirstReadFile();
-  void ParserSecondReadFile();
-  size_t ParserCountOfVertexesInStr(const std::string &str);
   output PrepareData();
   output Translate(double move_x, double move_y, double move_z);
   output Rotate(axis axis, double angle);
@@ -34,6 +32,10 @@ class Model {
   void FreePoints();
 
  private:
+  output ParserFirstReadFile_();
+  void ParserSecondReadFile_();
+  size_t ParserCountOfVertexesInStr_(const std::string &str);
+  size_t ParserCountOfChars_(char *str);
   s21::point **points_ = nullptr;
   s21::data cube_data_;
   std::string path_;
