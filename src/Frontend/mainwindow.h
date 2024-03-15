@@ -10,6 +10,9 @@
 #include <QMainWindow>
 #include <QTimer>
 
+#include "../cpp_files/s21_controller.hpp"
+#include "../cpp_files/obj_structs.hpp"
+
 class Settings;
 
 QT_BEGIN_NAMESPACE
@@ -29,6 +32,8 @@ class MainWindow : public QMainWindow {
   void setTypeLine(int type);
   void setTypeVertexes(bool isVertexCircle, bool isVertexEnable);
   void setProjection(bool ortho);
+
+  static s21::Controller &getController();
 
  public slots:
   void keyPressEvent(QKeyEvent *event);
@@ -94,5 +99,6 @@ class MainWindow : public QMainWindow {
   QVector<QImage> gif_list;
   QTimer timer;
   Settings *_settings;
+  static s21::Controller controller_;
 };
 #endif  // MAINWINDOW_H

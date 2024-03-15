@@ -12,7 +12,7 @@
 namespace s21 {
 class Model {
  public:
-  Model(const std::string filename);
+  Model() = default;
   ~Model();
 
   output ParserFirstReadFile();
@@ -23,6 +23,9 @@ class Model {
   output Rotate(axis axis, double angle);
   output Scale(double mult_x, double mult_y, double mult_z);
   void CombineFacesWithVertexes();
+  void SetFilePath(const std::string str);
+  size_t GetCountOfVertexes();
+  size_t GetCountOfFacets();
 
   s21::data &GetCubeData();
   s21::point **GetPoints();
@@ -33,7 +36,7 @@ class Model {
  private:
   s21::point **points_ = nullptr;
   s21::data cube_data_;
-  const std::string path_;
+  std::string path_;
 };
 };  // namespace s21
 

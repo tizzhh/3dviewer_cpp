@@ -3,16 +3,7 @@
 
 #include <QObject>
 #include <QtOpenGLWidgets/QOpenGLWidget>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-#include "../c_files/3d_viewer.h"
-typedef struct data data_t;
-#ifdef __cplusplus
-}
-#endif
-
+#include "mainwindow.h"
 class Settings;
 
 class OGLWidget : public QOpenGLWidget {
@@ -21,7 +12,7 @@ class OGLWidget : public QOpenGLWidget {
   OGLWidget(QWidget *parent = nullptr);
   virtual ~OGLWidget();
 
-  void setDataObject(data_t newDataObject);
+//  void setDataObject(data_t newDataObject);
   void moveCamera(QString str);
   void setAngleZ(int newAngleZ);
   void setAngleX(int newAngleX);
@@ -75,7 +66,7 @@ class OGLWidget : public QOpenGLWidget {
   bool isVertexCircle = true;
   void drawObject();
   void drawVertexes();
-  data_t dataObject = {0};
+//  data_t dataObject = {0};
   int _angleZ = 0;
   int _angleX = 0;
   int _angleY = 0;

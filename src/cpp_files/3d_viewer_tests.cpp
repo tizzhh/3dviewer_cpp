@@ -8,7 +8,8 @@
 #define TOLERANCE 1e-6
 
 TEST(Parser, Test1) {
-  s21::Controller controller("test_objs/cube.obj");
+  s21::Controller controller;
+  controller.SetFilePath("test_objs/cube.obj");
   s21::output status = controller.PrepareData();
   ASSERT_EQ(status, s21::OK);
   std::vector<double> vertexes = {
@@ -57,7 +58,8 @@ TEST(Parser, Test1) {
 }
 
 TEST(Affine, Rotate) {
-  s21::Controller controller("test_objs/cube.obj");
+  s21::Controller controller;
+  controller.SetFilePath("test_objs/cube.obj");
   controller.PrepareData();
   s21::output status = controller.Rotate(s21::OX, 45);
   ASSERT_EQ(status, s21::OK);
@@ -66,7 +68,8 @@ TEST(Affine, Rotate) {
   status = controller.Rotate(s21::OZ, 45);
   ASSERT_EQ(status, s21::OK);
   auto cube_data = controller.GetCubeData();
-  s21::Controller cube_rotated_controller("test_objs/cube_rotated.obj");
+  s21::Controller cube_rotated_controller;
+  cube_rotated_controller.SetFilePath("test_objs/cube_rotated.obj");
   cube_rotated_controller.PrepareData();
   auto cube_rotated = cube_rotated_controller.GetCubeData();
   for (size_t i = 0; i < cube_data.matrix_3d.rows; ++i) {
@@ -78,12 +81,14 @@ TEST(Affine, Rotate) {
 }
 
 TEST(Affine, Translate) {
-  s21::Controller controller("test_objs/cube.obj");
+  s21::Controller controller;
+  controller.SetFilePath("test_objs/cube.obj");
   controller.PrepareData();
   s21::output status = controller.Translate(5, 6, 9);
   ASSERT_EQ(status, s21::OK);
   auto cube_data = controller.GetCubeData();
-  s21::Controller cube_translated_controller("test_objs/cube_translated.obj");
+  s21::Controller cube_translated_controller;
+  cube_translated_controller.SetFilePath("test_objs/cube_translated.obj");
   cube_translated_controller.PrepareData();
   auto cube_translated = cube_translated_controller.GetCubeData();
   for (size_t i = 0; i < cube_data.matrix_3d.rows; ++i) {
@@ -95,12 +100,14 @@ TEST(Affine, Translate) {
 }
 
 TEST(Affine, Scale) {
-  s21::Controller controller("test_objs/cube.obj");
+  s21::Controller controller;
+  controller.SetFilePath("test_objs/cube.obj");
   controller.PrepareData();
   s21::output status = controller.Scale(1, 10, -0.25);
   ASSERT_EQ(status, s21::OK);
   auto cube_data = controller.GetCubeData();
-  s21::Controller cube_translated_controller("test_objs/cube_scaled.obj");
+  s21::Controller cube_translated_controller;
+  cube_translated_controller.SetFilePath("test_objs/cube_scaled.obj");
   cube_translated_controller.PrepareData();
   auto cube_translated = cube_translated_controller.GetCubeData();
   for (size_t i = 0; i < cube_data.matrix_3d.rows; ++i) {
@@ -112,13 +119,22 @@ TEST(Affine, Scale) {
 }
 
 TEST(Parser, FileDoesNotExist) {
-  s21::Controller controller("wljndjajwbgjw.obj");
+  s21::Controller controller;
+  controller.SetFilePath("wljndjajwbgjw.obj");
   s21::output status = controller.PrepareData();
   ASSERT_EQ(status, s21::ERROR);
 }
 
+TEST(Parser, FileLarge) {
+  s21::Controller controller;
+  controller.SetFilePath("test_objs/sword.obj");
+  s21::output status = controller.PrepareData();
+  ASSERT_EQ(status, s21::OK);
+}
+
 TEST(Affine, Nulls) {
-  s21::Controller controller("test_objs/cube.obj");
+  s21::Controller controller;
+  controller.SetFilePath("test_objs/cube.obj");
   s21::output status = controller.Rotate(s21::OX, 45);
   ASSERT_EQ(status, s21::ERROR);
   status = controller.Translate(5, 6, 9);

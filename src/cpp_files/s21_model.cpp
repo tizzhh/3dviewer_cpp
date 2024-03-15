@@ -1,8 +1,6 @@
 #include "s21_model.hpp"
 
 namespace s21 {
-Model::Model(const std::string filename) : path_(filename){};
-
 Model::~Model() {
   FreePoints();
   RemoveMatrix();
@@ -190,6 +188,16 @@ void Model::CombineFacesWithVertexes() {
               .matrix[cube_data_.polygons[i].vertexes[j] - 1][OZ];
     }
   }
+}
+
+void Model::SetFilePath(const std::string str) {
+  path_ = str;
+}
+
+size_t Model::GetCountOfVertexes(){return cube_data_.count_of_vertexes; }
+
+size_t Model::GetCountOfFacets() {
+  return cube_data_.count_of_facets;
 }
 
 void Model::FreePoints() {

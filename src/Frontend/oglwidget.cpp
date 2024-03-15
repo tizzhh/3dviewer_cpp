@@ -51,11 +51,14 @@ void OGLWidget::createDrawbleData() {
   vecLines.clear();
   vecVertexes.clear();
   countVertexes = 0;
-  point **combinedData;
-  combinedData = S21_CombineFacetsWithVertexes(&dataObject);
+//  point **combinedData;
+//  combinedData = S21_CombineFacetsWithVertexes(&dataObject);
+  MainWindow::getController().CombineFacesWithVertexes();
+  auto combinedData = MainWindow::getController().GetPoints();
+  auto dataObject = MainWindow::getController().GetCubeData();
   for (int i = 0; i < dataObject.count_of_facets; ++i) {
-    countVertexes += dataObject.polygons[i].numbers_of_vertexes_in_facets;
-    for (int j = 0; j < dataObject.polygons[i].numbers_of_vertexes_in_facets;
+    countVertexes += dataObject.polygons[i].number_of_vertexes_in_facets;
+    for (int j = 0; j < dataObject.polygons[i].number_of_vertexes_in_facets;
          ++j) {
       vecLines.push_back(combinedData[i][j].ox);
       vecLines.push_back(combinedData[i][j].oy);
@@ -114,7 +117,7 @@ void OGLWidget::drawObject() {
     glEnable(GL_LINE_STIPPLE);
   } else
     glDisable(GL_LINE_STIPPLE);
-  if (dataObject.count_of_vertexes != 0) {
+  if (MainWindow::getController().GetCountOfVertexes() != 0) {
     glColor3f(linesColor.redF(), linesColor.greenF(), linesColor.blueF());
     double *data = vecLines.data();
     glEnableClientState(GL_VERTEX_ARRAY);
@@ -216,10 +219,10 @@ void OGLWidget::setAngleZ(int newAngleZ) {
   update();
 }
 
-void OGLWidget::setDataObject(data_t newDataObject) {
-  dataObject = newDataObject;
-  createDrawbleData();
-}
+//void OGLWidget::setDataObject(data_t newDataObject) {
+//  dataObject = newDataObject;
+//  createDrawbleData();
+//}
 
 void OGLWidget::moveCamera(QString str) {
   glPushMatrix();

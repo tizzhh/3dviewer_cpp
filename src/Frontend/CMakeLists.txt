@@ -31,8 +31,11 @@ set(PROJECT_SOURCES
         ../giflib/gifalloc.c
         ../giflib/qgifimage.h
         ../giflib/qgifimage.cpp
-        ../c_files/3d_viewer.h
-        ../c_files/3d_viewer.c
+        # ../c_files/3d_viewer.h
+        # ../c_files/3d_viewer.c
+        ../cpp_files/s21_controller.hpp
+        ../cpp_files/s21_controller.cpp
+        ../cpp_files/obj_structs.hpp
         main.cpp
         mainwindow.cpp
         oglwidget.cpp

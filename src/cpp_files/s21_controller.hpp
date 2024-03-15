@@ -6,7 +6,7 @@
 namespace s21 {
 class Controller {
  public:
-  Controller(const std::string filename);
+  Controller() = default;
   ~Controller() = default;
 
   output PrepareData();
@@ -14,6 +14,9 @@ class Controller {
   output Rotate(axis axis, double angle);
   output Scale(double mult_x, double mult_y, double mult_z);
   void CombineFacesWithVertexes();
+  void SetFilePath(const std::string str);
+  size_t GetCountOfVertexes();
+  size_t GetCountOfFacets();
 
   s21::data &GetCubeData();
   s21::point **GetPoints();

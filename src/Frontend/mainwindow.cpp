@@ -2,14 +2,6 @@
 
 #include "./ui_mainwindow.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-#include "../c_files/3d_viewer.h"
-#ifdef __cplusplus
-}
-#endif
-
 #include <QColorDialog>
 #include <QDir>
 #include <QFileDialog>
@@ -26,6 +18,8 @@ extern "C" {
 #include "../giflib/qgifimage.h"
 #include "oglwidget.h"
 #include "settings.h"
+
+s21::Controller MainWindow::controller_;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -172,23 +166,26 @@ void MainWindow::on_loadButton_clicked() {
   QString file =
       QFileDialog::getOpenFileName(this, "Open", "../test_objs", "*.obj");
   if (!file.isEmpty()) {
-    struct data dataObject = {0};
-    QByteArray ba = file.toLocal8Bit();
-    char *path = ba.data();
-    output res = S21_PrepareData(path, &dataObject);
-    if (res == ERROR) {
+    // struct data dataObject = {0};
+    // QByteArray ba = file.toLocal8Bit();
+    // char *path = ba.data();
+    // output res = S21_PrepareData(path, &dataObject);
+    // controller_(path.toStdString());
+      controller_.SetFilePath(file.toStdString());
+      s21::output res = controller_.PrepareData();
+    if (res == s21::ERROR) {
       QMessageBox::critical(this, "Error", "Failed parse file");
     } else {
-      ui->oglwidget->setDataObject(dataObject);
+//      ui->oglwidget->setDataObject(dataObject);
       ui->oglwidget->update();
       QStringList list = file.split("/");
       QString text = list.last();
       ui->labelName->setText("obj:" + text);
       text.clear();
-      text = QString::number(dataObject.count_of_facets);
+      text = QString::number(controller_.GetCountOfVertexes());
       ui->labelPoligons->setText("Vertexes:" + text);
       text.clear();
-      text = QString::number(dataObject.count_of_vertexes);
+      text = QString::number(controller_.GetCountOfFacets());
       ui->labelVertexes->setText("Poligons:" + text);
     }
   }
@@ -348,3 +345,5 @@ void MainWindow::on_radioButtonDashed_clicked() {
 void MainWindow::on_radioButtonTriangles_clicked() {
   ui->oglwidget->setTypeLine(2);
 }
+
+s21::Controller &MainWindow::getController() { return controller_; }
