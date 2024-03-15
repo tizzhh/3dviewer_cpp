@@ -33,3 +33,9 @@ size_t s21::Controller::GetCountOfFacets() { return model_.GetCountOfFacets(); }
 s21::data& s21::Controller::GetCubeData() { return model_.GetCubeData(); }
 
 s21::point** s21::Controller::GetPoints() { return model_.GetPoints(); }
+
+void s21::Controller::RemoveMatrix() { model_.RemoveMatrix(); }
+
+void s21::Controller::RemovePolygons() { model_.RemovePolygons(); }
+
+void s21::Controller::FreePoints() { model_.FreePoints(); }

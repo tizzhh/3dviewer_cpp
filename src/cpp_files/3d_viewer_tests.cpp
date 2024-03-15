@@ -132,6 +132,18 @@ TEST(Parser, FileLarge) {
   ASSERT_EQ(status, s21::OK);
 }
 
+TEST(Parser, SeveralFiles) {
+  s21::Controller controller;
+  controller.SetFilePath("test_objs/sword.obj");
+  s21::output status = controller.PrepareData();
+  ASSERT_EQ(status, s21::OK);
+  controller.CombineFacesWithVertexes();
+  controller.SetFilePath("test_objs/capybara.obj");
+  status = controller.PrepareData();
+  ASSERT_EQ(status, s21::OK);
+  controller.CombineFacesWithVertexes();
+}
+
 TEST(Affine, Nulls) {
   s21::Controller controller;
   controller.SetFilePath("test_objs/cube.obj");

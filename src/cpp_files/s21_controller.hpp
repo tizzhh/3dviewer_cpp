@@ -20,6 +20,9 @@ class Controller {
 
   s21::data &GetCubeData();
   s21::point **GetPoints();
+  void RemoveMatrix();
+  void RemovePolygons();
+  void FreePoints();
 
  private:
   s21::Model model_;

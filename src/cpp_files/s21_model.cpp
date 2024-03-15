@@ -3,8 +3,8 @@
 namespace s21 {
 Model::~Model() {
   FreePoints();
-  RemoveMatrix();
   RemovePolygons();
+  RemoveMatrix();
 };
 
 output Model::ParserFirstReadFile_() {
@@ -191,11 +191,17 @@ void Model::CombineFacesWithVertexes() {
           cube_data_.matrix_3d
               .matrix[cube_data_.polygons[i].vertexes[j] - 1][OZ];
     }
-    std::cout << '\n';
   }
 }
 
-void Model::SetFilePath(const std::string str) { path_ = str; }
+void Model::SetFilePath(const std::string str) {
+  FreePoints();
+  RemovePolygons();
+  RemoveMatrix();
+  cube_data_.count_of_facets = 0;
+  cube_data_.count_of_vertexes = 0;
+  path_ = str;
+}
 
 size_t Model::GetCountOfVertexes() { return cube_data_.count_of_vertexes; }
 
