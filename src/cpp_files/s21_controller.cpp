@@ -1,8 +1,6 @@
 #include "s21_controller.hpp"
 
-s21::output s21::Controller::PrepareData() {
-    return model_.PrepareData();
-}
+s21::output s21::Controller::PrepareData() { return model_.PrepareData(); }
 
 s21::output s21::Controller::Translate(double move_x, double move_y,
                                        double move_z) {
@@ -26,7 +24,9 @@ void s21::Controller::SetFilePath(const std::string str) {
   model_.SetFilePath(str);
 }
 
-size_t s21::Controller::GetCountOfVertexes() { return model_.GetCountOfVertexes(); }
+size_t s21::Controller::GetCountOfVertexes() {
+  return model_.GetCountOfVertexes();
+}
 
 size_t s21::Controller::GetCountOfFacets() { return model_.GetCountOfFacets(); }
 

@@ -49,12 +49,12 @@ void Model::ParserSecondReadFile() {
     char mode;
     std::istringstream iss(getline_str);
     iss >> mode;
-    if (mode == 'v') {
+    if (mode == 'v' && getline_str[1] == ' ') {
       iss >> cube_data_.matrix_3d.matrix[count_of_vertexes][0] >>
           cube_data_.matrix_3d.matrix[count_of_vertexes][1] >>
           cube_data_.matrix_3d.matrix[count_of_vertexes][2];
       ++count_of_vertexes;
-    } else if (mode == 'f') {
+    } else if (mode == 'f' && getline_str[1] == ' ') {
 #define vert_in_fac \
   cube_data_.polygons[count_of_polygons].number_of_vertexes_in_facets
       vert_in_fac = ParserCountOfVertexesInStr(getline_str);
@@ -190,15 +190,11 @@ void Model::CombineFacesWithVertexes() {
   }
 }
 
-void Model::SetFilePath(const std::string str) {
-  path_ = str;
-}
+void Model::SetFilePath(const std::string str) { path_ = str; }
 
-size_t Model::GetCountOfVertexes(){return cube_data_.count_of_vertexes; }
+size_t Model::GetCountOfVertexes() { return cube_data_.count_of_vertexes; }
 
-size_t Model::GetCountOfFacets() {
-  return cube_data_.count_of_facets;
-}
+size_t Model::GetCountOfFacets() { return cube_data_.count_of_facets; }
 
 void Model::FreePoints() {
   if (points_) {
